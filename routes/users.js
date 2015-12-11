@@ -10,9 +10,9 @@ router.get('/', function(req, res, next) {
   	var response = {};
 	userModel.find({},function(err,data){
 	    if(err) {
-	        response = {"error" : true,"message" : "Error fetching data"};
+	        response = {"status" : 400,"message" : "Error fetching data"};
 	    } else {
-	        response = {"error" : false,"message" : data};
+	        response = {"status" : 200,"message" : data};
 	    }
 	    res.json(response);
 	});

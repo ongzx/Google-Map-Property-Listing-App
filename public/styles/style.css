@@ -1,0 +1,20 @@
+.property-box
+{
+	padding: 0px;
+}
+
+.property-wrapper
+{
+	height:500px;
+	overflow-y: scroll;
+}
+
+.search-wrapper
+{
+	margin-bottom: 20px;
+}
+
+.angular-google-map-container 
+{ 
+	height: 500px; 
+}

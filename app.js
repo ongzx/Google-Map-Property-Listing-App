@@ -9,6 +9,8 @@ var validator = require('express-validator');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var units = require('./routes/units');
+var submissions = require('./routes/submissions');
 
 var mongoose = require("mongoose");
 mongoose.connect('mongodb://ongzx:password@ds063870.mongolab.com:63870/nodeapp');
@@ -29,7 +31,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/api/users', users);
+app.use('/api/units', units);
+app.use('/api/submissions', submissions);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
