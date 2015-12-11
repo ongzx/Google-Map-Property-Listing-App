@@ -20,13 +20,14 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res) {
 	var response = {};
+
 	var submission = new submissionModel();
 
-	submission.answer1 = req.body.answers[0];
-	submission.answer2 = req.body.answers[1];
-	submission.answer3 = req.body.answers[2];
-	submission.answer4 = req.body.answers[3];
-	submission.answer5 = req.body.answers[4];
+	submission.answer1 = req.body.answer1;
+	submission.answer2 = req.body.answer2;
+	submission.answer3 = req.body.answer3;
+	submission.answer4 = req.body.answer4;
+	submission.answer5 = req.body.answer5;
 	submission.name = req.body.name;
 	submission.email = req.body.email;
 	submission.ic = req.body.ic;
