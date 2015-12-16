@@ -9,18 +9,16 @@ var unitSchema = new Schema({
 		"street_name": String,
 		"postal_code": Number,
 		"city": String,
-		"country" : String,
-		"coordinates": {
-			"latitude": Number,
-			"longitude": Number
-		}
+		"country" : String
+	},
+	"loc": {
+		"type": [Number],
+		"index": "2d"
 	},
 	"price" : Number,
 	"num_rooms" : Number,
 	"num_bathrooms" : Number,
 	"sqft" : Number
 });
-
-unitSchema.index({ "$**": "text" }); 
 
 module.exports = mongoose.model('units',unitSchema);

@@ -2,22 +2,24 @@
 
 <div class="row ">
   <div class="col-sm-6 ">
-
     <div class="search-wrapper">
       <div class="input-group">
         <input type="text" class="form-control" ng-model="search_value" placeholder="Search for...">
         <span class="input-group-btn">
-          <button class="btn btn-default" type="button">Go!</button>
+          <button class="btn btn-default" type="button" ng-click="searchProp()">Go!</button>
         </span>
       </div>
     </div>
 
     <div class="property-wrapper">
-      <div class="col-sm-6" ng-repeat="item in properties">
+      <div class="col-sm-12 text-center" ng-if="properties.length == 0">
+        <label>Nothing found!</label>
+      </div>
+      <div class="col-sm-6" ng-repeat="item in properties track by $index">
         <div class="property-box thumbnail">
           <img src="http://lorempixel.com/400/200/city/">
           <div class="caption">
-            <h3>Room {{$index+1}}</h3>
+            <h3><a href="#/{{item._id}}">Room {{$index+1}}</a></h3>
             <address>
               <strong>{{item.address.block_number}}, {{item.address.street_name}}</strong><br>
               {{item.address.city}}, {{item.address.country}} {{item.address.postal_code}}<br>
@@ -33,7 +35,7 @@
     <ui-gmap-google-map center='map.center' zoom='map.zoom' draggable="true">
       <ui-gmap-circle center="circle.center" stroke="circle.stroke" fill="circle.fill" radius="circle.radius" visible="circle.visible" geodesic="circle.geodesic" editable="circle.editable" draggable="circle.draggable" clickable="circle.clickable" control="circle.control" events="circle_event"></ui-gmap-circle>
 
-      <ui-gmap-marker ng-repeat="item in properties" coords="item.address.coordinates" events="marker_event" idkey="item._id">
+      <ui-gmap-marker ng-repeat="item in properties" coords="item.coords" events="marker_event" idkey="item._id">
       </ui-gmap-marker>
     </ui-gmap-google-map>
   </div>

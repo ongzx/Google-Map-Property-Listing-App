@@ -47,14 +47,6 @@ router.post('/', function(req,res) {
 			notEmpty: true,
 			errorMessage: 'Missing country'
 		},
-		'address.coordinates.latitude' : {
-			notEmpty: true,
-			errorMessage: 'Missing x coordinate'
-		},
-		'address.coordinates.longitude' : {
-			notEmpty: true,
-			errorMessage: 'Missing y coordinate'
-		},
 		'price' : {
 			notEmpty: true,
 			errorMessage: 'Missing price'
@@ -95,8 +87,9 @@ router.post('/', function(req,res) {
 	unit.address.postal_code = req.body.address.postal_code;
 	unit.address.city = req.body.address.city;
 	unit.address.country = req.body.address.country;
-	unit.address.coordinates.latitude = req.body.address.coordinates.latitude;
-	unit.address.coordinates.longitude = req.body.address.coordinates.longitude;
+	// unit.address.coordinates.latitude = req.body.address.coordinates.latitude;
+	// unit.address.coordinates.longitude = req.body.address.coordinates.longitude;
+	unit.loc = [ req.body.latitude, req.body.longitude ],
 	unit.price = req.body.price;
 	unit.num_rooms = req.body.num_rooms;
 	unit.num_bathrooms = req.body.num_bathrooms;
@@ -148,20 +141,52 @@ router.delete('/:id', function(req,res) {
 });
 
 router.post('/search', function(req, res) {
-	console.log(req.query.query);
+
+	var re = new RegExp(req.query.q, 'i');
+
 	var response = {};
-	unitModel.find(
-        { $text : { $search : req.query.query } }, 
-        { score : { $meta: "textScore" } }
-    )
-    .sort({ score : { $meta : 'textScore' } })
-    .exec(function(err, data) {
-       if (err) {
+
+	unitModel.find().or([
+		{"address.city": {"$regex": re}}, 
+		{"address.country": {"$regex": re}}, 
+		{"address.street_name": {"$regex": re}}
+	]).exec(function(err, data) {
+		if (err) {
 			response = {"status": 400, "response": "Error fetching data"};
 		} else {
+
 			response = {"status": 200, "response": data};
 		}
 		res.json(response);
+	});
+});
+
+router.post('/find', function(req, res) {
+	var limit = req.query.limit || 10;
+
+	var radius = req.query.radius /10;
+
+	console.log(radius);
+
+	var coords = [];
+    coords[0] = req.query.longitude;
+    coords[1] = req.query.latitude;
+
+
+	unitModel.find({
+      loc: {
+        $geoWithin: {
+        	$center: [ coords, radius ]
+        }
+      }
+    }).limit(limit).exec(function(err, data) {
+      	if (err) {
+			response = {"status": 400, "response": "Error fetching data"};
+		} else {
+
+			response = {"status": 200, "response": data};
+		}
+      	res.json(response);
     });
 });
 
